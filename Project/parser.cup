@@ -1,8 +1,3 @@
-/*
-   Simple +/-/* expression language; 
-   parser evaluates constant expressions on the fly
-*/
-
 package cup.example;
 
 import java_cup.runtime.*;
@@ -31,14 +26,16 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
-terminal            MOVE, COMMA; // adaugă terminalele MOVE și COMMA
-terminal Integer    NUMBER;        // our scanner provides numbers as integers
+terminal SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
+terminal MOVE, DRAW, CLEAR, COMMA; // Adăugăm terminalele necesare
+terminal Integer NUMBER; // Numere întregi
 
 /* Non terminals */
-non terminal            expr_list;
-non terminal Integer    expr;      // used to store evaluated subexpressions
-non terminal            move_stmt; // pentru declarația de move
+non terminal expr_list;
+non terminal Integer expr; // folosit pentru a stoca subexpresiile evaluate
+non terminal move_stmt; // pentru declarația de move
+non terminal draw_stmt; // pentru declarația de draw
+non terminal clear_stmt; // pentru declarația de clear
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -48,21 +45,34 @@ precedence left UMINUS;
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | expr:e SEMI                   {: System.out.println(e); :}
-            | move_stmt:m SEMI              {: System.out.println("Executed move statement with: " + m); :} // adaugă un stmt pentru move
+            | move_stmt:m SEMI              {: System.out.println("Executed move statement with: " + m); :}
+            | draw_stmt:d SEMI              {: System.out.println("Executed draw statement with: " + d); :}
+            | clear_stmt:c SEMI             {: System.out.println("Executed clear statement."); :} // Recunoaștem clear
             ;
 
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | MINUS expr:e                 {: RESULT = -e;           :}
+expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2; :}
+             | expr:e1 MINUS expr:e2        {: RESULT = e1 - e2; :}
+             | expr:e1 TIMES expr:e2        {: RESULT = e1 * e2; :}
+             | MINUS expr:e                 {: RESULT = -e; :}
              %prec UMINUS
-             | LPAREN expr:e RPAREN         {: RESULT = e;           :}
-             | NUMBER:n                     {: RESULT = n;           :}
+             | LPAREN expr:e RPAREN         {: RESULT = e; :}
+             | NUMBER:n                     {: RESULT = n; :}
              ;
 
 move_stmt ::= MOVE expr:e1 COMMA expr:e2   {: 
-                // Executați logica de mișcare aici, de exemplu:
-                System.out.println("The expression is recognised"); 
-                
+                System.out.println("The move function is recognized: " + e1 + ", " + e2); 
+                RESULT = null; // Poți returna un rezultat specific dacă e necesar
+            :}
+            ;
+
+draw_stmt ::= DRAW LPAREN expr:e1 COMMA expr:e2 RPAREN {: 
+                System.out.println("The draw function is recognized: " + e1 + ", " + e2); 
+                RESULT = null; // Poți returna un rezultat specific dacă e necesar
+            :}
+            ;
+
+clear_stmt ::= CLEAR {: 
+                System.out.println("The clear function is recognized."); 
+                RESULT = null; // Poți returna un rezultat specific dacă e necesar
             :}
             ;
