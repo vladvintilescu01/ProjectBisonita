@@ -81,10 +81,10 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
     "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
     ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
     {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
-    "move"       { return symbolFactory.newSymbol("MOVE", sym.MOVE); }
-    "draw"       { return symbolFactory.newSymbol("DRAW", sym.DRAW); }
-    "clear"      { return symbolFactory.newSymbol("CLEAR", sym.CLEAR); }
-    ","          { return symbolFactory.newSymbol("COMMA", sym.COMMA); }
+    "move"       { return symbolFactory.newSymbol("MOVE", MOVE); }
+    "draw"       { return symbolFactory.newSymbol("DRAW", DRAW); }
+    "clear"      { return symbolFactory.newSymbol("CLEAR", CLEAR); }
+    ","          { return symbolFactory.newSymbol("COMMA", COMMA); }
 }
 
 // error fallback

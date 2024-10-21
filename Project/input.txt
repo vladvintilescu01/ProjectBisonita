@@ -1,1 +1,1 @@
-clear;
+draw 1,2;

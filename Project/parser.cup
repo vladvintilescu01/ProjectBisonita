@@ -26,16 +26,16 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
-terminal MOVE, DRAW, CLEAR, COMMA; // Adăugăm terminalele necesare
-terminal Integer NUMBER; // Numere întregi
+terminal SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, INT;
+terminal MOVE, DRAW, CLEAR, COMMA; 
+terminal Integer NUMBER; 
 
 /* Non terminals */
 non terminal expr_list;
-non terminal Integer expr; // folosit pentru a stoca subexpresiile evaluate
-non terminal move_stmt; // pentru declarația de move
-non terminal draw_stmt; // pentru declarația de draw
-non terminal clear_stmt; // pentru declarația de clear
+non terminal Integer expr; 
+non terminal move_stmt; 
+non terminal draw_stmt; 
+non terminal clear_stmt; 
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -61,18 +61,18 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2; :}
 
 move_stmt ::= MOVE expr:e1 COMMA expr:e2   {: 
                 System.out.println("The move function is recognized: " + e1 + ", " + e2); 
-                RESULT = null; // Poți returna un rezultat specific dacă e necesar
+                RESULT = null; 
             :}
             ;
 
-draw_stmt ::= DRAW LPAREN expr:e1 COMMA expr:e2 RPAREN {: 
+draw_stmt ::= DRAW expr:e1 COMMA expr:e2  {: 
                 System.out.println("The draw function is recognized: " + e1 + ", " + e2); 
-                RESULT = null; // Poți returna un rezultat specific dacă e necesar
+                RESULT = null; 
             :}
             ;
 
 clear_stmt ::= CLEAR {: 
                 System.out.println("The clear function is recognized."); 
-                RESULT = null; // Poți returna un rezultat specific dacă e necesar
+                RESULT = null; 
             :}
             ;
